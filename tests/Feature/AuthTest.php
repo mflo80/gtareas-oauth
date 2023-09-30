@@ -2,34 +2,22 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-
-    private $campos = [
-        "id",
-        "nombre",
-        "apellido",
-        "email",
-        "email_verified_at",
-        "created_at",
-        "updated_at",
-        "deleted_at"
-    ];
-
     public function test_login_correcto()
     {
-        $datoslogin = [
+        $response = $this->json('POST', 'api/login', [
             'email' => 'juan.perez@example.com',
             'password' => '123456',
-        ];
+        ]);
 
-        $response = $this->call('POST', '/api/login', $datoslogin);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue(Auth::check());
         $response->assertJsonFragment([
@@ -40,29 +28,46 @@ class AuthTest extends TestCase
 
     public function test_login_incorrecto()
     {
-        $datoslogin = [
+        $response = $this->json('POST', 'api/login', [
             'email' => 'juan.perez@example.com',
             'password' => '1234567',
-        ];
-
-        $response = $this->call('POST', '/api/login', $datoslogin);
-        $response->assertJsonFragment([
-            "status" => false,
-            "message" => "Correo y/o contraseña incorrectos."
         ]);
+
+        $response->assertStatus(401)
+            ->assertJsonFragment([
+                "status" => false,
+                "message" => "Correo y/o contraseña incorrectos."
+            ]);
     }
 
     public function test_login_sin_cargar_datos()
     {
-        $datoslogin = [
+        $response = $this->json('POST', 'api/login', [
             'email' => '',
             'password' => '',
-         ];
-
-        $response = $this->call('POST', '/api/login', $datoslogin);
-        $response->assertJsonFragment([
-            "status" => false,
-            "message" => "Error al validar datos",
         ]);
+
+        $response->assertStatus(401)
+            ->assertJsonFragment([
+                "status" => false,
+                "message" => "Error al validar datos",
+            ]);
+    }
+
+    public function test_logout()
+    {
+        $response = $this->json('GET', 'api/logout', []);
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+               "status" => true,
+               'message' => 'Se ha cerrado la sesión con éxito.'
+            ]);
+    }
+
+    public function test_logout_no_autenticado()
+    {
+        $response = $this->json('GET', 'api/logout', []);
+        $response->assertStatus(401)
+            ->assertSee('Unauthenticated');;
     }
 }

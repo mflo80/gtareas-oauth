@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -34,11 +36,11 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-
+            $token = $user->createToken("api_token", ["*"], Carbon::now()->addMinutes(60*24));
             return response()->json([
                 'status' => true,
                 'message' => 'Sesión iniciada correctamente',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $token,
             ], 200);
 
         } catch (\Throwable $th) {
@@ -50,6 +52,17 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
-
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Se ha cerrado la sesión con éxito.'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }
