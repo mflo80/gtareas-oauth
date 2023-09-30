@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
              'email' => 'juan.perez@example.com',
              'email_verified_at' => now(),
              'password' => Hash::make('123456'),
-             'remember_token' => Str::random(30)
+             'token' => null,
+             'remember_token' => Str::random(60)
         ]);
     }
 }

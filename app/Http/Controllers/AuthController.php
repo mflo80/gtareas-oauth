@@ -34,8 +34,17 @@ class AuthController extends Controller
                 ], 401);
             }
 
+            $datos = [
+                'email' => 'juan.perez@example.com',
+                'password' => '123456'
+            ];
+
             $user = User::where('email', $request->email)->first();
-            $token = $user->createToken("api_token", ["*"], Carbon::now()->addMinutes(60*24));
+            $datos = (array) $user->createToken("api_token", ["*"], Carbon::now()->addMinutes(10));
+            $token = $datos['plainTextToken'];
+            $user->token = $token;
+            $user->save();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Sesión iniciada correctamente',
@@ -53,6 +62,12 @@ class AuthController extends Controller
     public function logout(Request $request){
         try {
             $request->user()->currentAccessToken()->delete();
+
+            $email = auth()->user()->email;
+            $user = User::where('email', $email)->first();
+            $user->token = null;
+            $user->save();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Se ha cerrado la sesión con éxito.'
