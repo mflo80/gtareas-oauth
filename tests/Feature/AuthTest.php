@@ -26,7 +26,7 @@ class AuthTest extends TestCase
         $response = $this->postJson('api/auth/login', $datos);
 
         $datos = $response->json();
-        $token = $datos['token']['plainTextToken'];
+        $token = $datos['token'];
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue(Auth::check());
