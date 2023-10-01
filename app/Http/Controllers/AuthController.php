@@ -40,7 +40,7 @@ class AuthController extends Controller
             ];
 
             $user = User::where('email', $request->email)->first();
-            $datos = (array) $user->createToken("api_token", ["*"], Carbon::now()->addMinutes(10));
+            $datos = (array) $user->createToken("api_token", ["*"], Carbon::now()->addMinutes(120));
             $token = $datos['plainTextToken'];
             $user->token = $token;
             $user->save();
