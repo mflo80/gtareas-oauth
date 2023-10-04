@@ -44,8 +44,6 @@ class AuthController extends Controller
         try {
             $request->user()->currentAccessToken()->delete();
 
-            Auth::logout();
-
             return response()->json([
                 'status' => true,
                 'message' => 'Se ha cerrado la sesión con éxito.'
@@ -70,7 +68,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Registro correcto.'
+                'message' => 'Registro correcto, intente iniciar sesión.'
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
