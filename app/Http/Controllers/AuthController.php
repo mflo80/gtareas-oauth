@@ -15,7 +15,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            $credenciales = $request->only(['email', 'password']);
+
+            if(!Auth::attempt($credenciales)){
                 return response()->json([
                     'status' => false,
                     'message' => 'Correo y/o contraseña incorrectos.',
@@ -30,7 +32,7 @@ class AuthController extends Controller
                 'status' => true,
                 'message' => 'Sesión iniciada correctamente',
                 'token' => $token,
-            ], 200);
+                ], 200);
 
         } catch (\Throwable $th) {
             return response()->json([
