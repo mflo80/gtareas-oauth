@@ -6,8 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -24,7 +22,15 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-            $datos = (array) $user->createToken("access_token", ["*"], Carbon::now()->addMinutes(360));
+
+            if(!isset($user->email_verified_at)){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Confirme primero su correo electrónico.'
+                    ], 401);
+            }
+
+            $datos = (array) $user->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
             $token = $datos['plainTextToken'];
 
             return response()->json([
@@ -48,28 +54,6 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Se ha cerrado la sesión con éxito.'
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        }
-    }
-
-    public function registro(Request $request){
-        try {
-            $usuario = new User();
-            $usuario->nombre = $request->post('nombre');
-            $usuario->apellido = $request->post('apellido');
-            $usuario->email = $request->post('email');
-            $usuario->password = Hash::make($request->post('password'));
-            $usuario->remember_token = Str::random(60);
-            $usuario->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Registro correcto, intente iniciar sesión.'
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
