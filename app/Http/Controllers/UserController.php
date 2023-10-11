@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function registro(Request $request){
+    public function registrar(Request $request){
         try {
             $usuario = new User();
             $usuario->nombre = $request->post('nombre');
@@ -23,6 +24,92 @@ class UserController extends Controller
                 'status' => true,
                 'message' => 'Registro correcto, confirme su correo.'
             ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function buscar(Request $request){
+        try {
+            $usuarios = User::all();
+
+            return response()->json([
+                'usuarios' => $usuarios,
+                'status' => true,
+                'message' => 'Usuarios encontrados.'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function buscar_id($id){
+        try {
+            $usuario = User::findOrFail($id);
+
+            return response()->json([
+                'usuario' => $usuario,
+                'status' => true,
+                'message' => 'Usuario encontrado.'
+            ], 200);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario no encontrado.'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function modificar(Request $request, $id){
+        try {
+            $usuario = User::findOrFail($id);
+            $usuario->nombre = $request->post('nombre');
+            $usuario->apellido = $request->post('apellido');
+            $usuario->email = $request->post('email');
+            $usuario->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario actualizado con éxito.'
+            ], 200);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario no encontrado.'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function eliminar($id){
+        try {
+            $usuario = User::findOrFail($id);
+            $usuario->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario eliminado con éxito.'
+            ], 200);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Usuario no encontrado.'
+            ], 404);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

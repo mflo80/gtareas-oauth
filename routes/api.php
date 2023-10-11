@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -15,7 +16,15 @@ use App\Http\Controllers\UserController;
 |
 */
 
+Route::controller(AuthController::class)->group(function () {
+    Route::post('auth/login', 'login')->name('login');
+    Route::get('auth/logout', 'logout')->middleware('auth:sanctum')->name('logout');
+});
 
-Route::post('auth/login', [AuthController::class, 'login'])->name('login');
-Route::get('auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
-Route::post('auth/registro', [UserController::class, 'registro'])->name('registro');
+Route::controller(UserController::class)->group(function () {
+    Route::get('/usuarios', 'buscar')->middleware('auth:sanctum')->name('buscar');
+    Route::get('/usuarios/{id}', 'buscar_id')->middleware('auth:sanctum')->name('buscar_id');
+    Route::post('/usuarios/registrar', 'registrar')->name('registrar');
+    Route::put('/usuarios/actualizar/{id}', 'actualizar')->middleware('auth:sanctum')->name('actualizar');
+    Route::delete('/usuarios/eliminar/{id}', 'eliminar')->middleware('auth:sanctum')->name('eliminar');
+});
