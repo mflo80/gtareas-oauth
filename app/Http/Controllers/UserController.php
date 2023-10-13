@@ -32,7 +32,7 @@ class UserController extends Controller
         }
     }
 
-    public function buscar(Request $request){
+    public function buscar(){
         try {
             $usuarios = User::all();
 
@@ -74,9 +74,10 @@ class UserController extends Controller
     public function modificar(Request $request, $id){
         try {
             $usuario = User::findOrFail($id);
-            $usuario->nombre = $request->post('nombre');
-            $usuario->apellido = $request->post('apellido');
-            $usuario->email = $request->post('email');
+            $usuario->nombre = $request->nombre;
+            $usuario->apellido = $request->apellido;
+            $usuario->email = $request->email;
+            $usuario->password = Hash::make($request->password);
             $usuario->save();
 
             return response()->json([

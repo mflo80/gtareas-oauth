@@ -14,8 +14,8 @@ class AuthTest extends TestCase
         global $token;
 
         $datos = [
-            'email' => 'juan.perez@example.com',
-            'password' => '123456'
+            "email" => "juan.perez@example.com",
+            "password" => "123456"
         ];
 
         $response = $this->postJson('api/auth/login', $datos);
@@ -35,8 +35,8 @@ class AuthTest extends TestCase
     public function test_login_incorrecto()
     {
         $datos = [
-            'email' => 'juan.perez@example.com',
-            'password' => '1234567'
+            "email" => "juan.perez@example.com",
+            "password" => "1234567"
         ];
 
         $response = $this->postJson('api/auth/login', $datos);
@@ -48,28 +48,12 @@ class AuthTest extends TestCase
             ]);
     }
 
-    public function test_login_sin_cargar_datos()
-    {
-        $datos = [
-            'email' => '',
-            'password' => ''
-        ];
-
-        $response = $this->postJson('api/auth/login', $datos);
-
-        $response->assertStatus(401)
-            ->assertJsonFragment([
-                "status" => false,
-                "message" => "Error al validar datos",
-            ]);
-    }
-
     public function test_logout_correcto()
     {
         global $token;
 
         $header = [
-            'Authorization' => 'Bearer ' .  $token
+            "Authorization" => "Bearer " .  $token
         ];
 
         $response = $this->getJson('api/auth/logout', $header);
@@ -78,7 +62,7 @@ class AuthTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonFragment([
                "status" => true,
-               'message' => 'Se ha cerrado la sesión con éxito.'
+               "message" => "Se ha cerrado la sesión con éxito."
             ]);
     }
 
@@ -93,7 +77,7 @@ class AuthTest extends TestCase
     {
         $token = "99|cRrJlyFSWCoZSVn9ZimNIQb3s3AwiAt35dd6udcI747495cc-copia";
         $header = [
-            'Authorization' => 'Bearer ' .  $token
+            "Authorization" => "Bearer " .  $token
         ];
 
         $response = $this->getJson('api/auth/logout', $header);

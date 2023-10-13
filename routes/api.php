@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +24,14 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/usuarios', 'buscar')->middleware('auth:sanctum')->name('buscar');
     Route::get('/usuarios/{id}', 'buscar_id')->middleware('auth:sanctum')->name('buscar_id');
-    Route::post('/usuarios/registrar', 'registrar')->name('registrar');
-    Route::put('/usuarios/actualizar/{id}', 'actualizar')->middleware('auth:sanctum')->name('actualizar');
-    Route::delete('/usuarios/eliminar/{id}', 'eliminar')->middleware('auth:sanctum')->name('eliminar');
+    Route::post('/usuarios', 'registrar')->name('registrar');
+    Route::put('/usuarios/{id}', 'actualizar')->middleware('auth:sanctum')->name('actualizar');
+    Route::delete('/usuarios/{id}', 'eliminar')->middleware('auth:sanctum')->name('eliminar');
 });
+
+Route::controller(PasswordController::class)->group(function () {
+    Route::get('/password', 'generarToken')->name('generarToken');
+    Route::get('/password/{token}', 'enviarCodigo')->name('modificar');
+    Route::put('/password', 'modificar')->name('modificar');
+});
+

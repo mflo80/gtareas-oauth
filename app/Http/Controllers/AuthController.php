@@ -21,7 +21,7 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $usuario = User::where('email', $request->email)->first();
 
             /*if(!isset($user->email_verified_at)){
                 return response()->json([
@@ -30,7 +30,7 @@ class AuthController extends Controller
                     ], 401);
             }*/
 
-            $datos = (array) $user->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
+            $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
             $token = $datos['plainTextToken'];
 
             return response()->json([
