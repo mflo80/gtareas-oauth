@@ -23,13 +23,6 @@ class AuthController extends Controller
 
             $usuario = User::where('email', $request->email)->first();
 
-            /*if(!isset($user->email_verified_at)){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Confirme primero su correo electrónico.'
-                    ], 401);
-            }*/
-
             $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
             $token = $datos['plainTextToken'];
 
