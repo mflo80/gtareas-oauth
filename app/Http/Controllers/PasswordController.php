@@ -29,7 +29,7 @@ class PasswordController extends Controller
                 ];
 
                 $correoEstado = (new EmailController)->enviar($datos);
-
+				
                 if($correoEstado){
                     return response()->json([
                         'status' => true,
