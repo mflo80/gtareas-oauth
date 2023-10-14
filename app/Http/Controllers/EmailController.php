@@ -10,7 +10,7 @@ class EmailController extends Controller
     public function enviar($datos){
         try {
             $mailData = [
-                'title' => 'Gestor de Tareas - ' . $datos['titulo'],
+                'titulo' => 'Gestor de Tareas - ' . $datos['titulo'],
                 'body' => 'Hola ' . $datos['nombre'] . " " . $datos['apellido'],
                 'token' => $datos['token'],
             ];

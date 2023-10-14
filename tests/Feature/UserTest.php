@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Feature\AuthTest;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -25,7 +24,7 @@ class UserTest extends TestCase
         ]);
     }
 
-  /*  public function test_registrar_usuario_error_email_registrado()
+    public function test_registrar_usuario_error_email_registrado()
     {
         $datos = [
             'nombre' => 'Juan',
@@ -37,10 +36,9 @@ class UserTest extends TestCase
         $response = $this->postJson('api/usuarios', $datos);
         $response->assertStatus(500)
         ->assertJsonFragment([
-            'status' => false,
-            'message' => 'Registro correcto, confirme su correo.'
+            'status' => false
         ]);
-    }*/
+    }
 
     public function test_buscar_usuarios()
     {

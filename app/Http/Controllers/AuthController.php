@@ -22,7 +22,6 @@ class AuthController extends Controller
             }
 
             $usuario = User::where('email', $request->email)->first();
-
             $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
             $token = $datos['plainTextToken'];
 

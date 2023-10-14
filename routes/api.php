@@ -35,3 +35,12 @@ Route::controller(PasswordController::class)->group(function () {
     Route::put('/password', 'modificar')->name('modificar');
 });
 
+/* USER TEST
+Route::controller(UserController::class)->group(function () {
+    Route::get('/usuarios', 'buscar')->name('buscar');
+    Route::get('/usuarios/{id}', 'buscar_id')->name('buscar_id');
+    Route::post('/usuarios', 'registrar')->name('registrar');
+    Route::put('/usuarios/{id}', 'actualizar')->name('actualizar');
+    Route::delete('/usuarios/{id}', 'eliminar')->name('eliminar');
+});*/
+
