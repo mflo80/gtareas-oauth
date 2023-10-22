@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class AuthController extends Controller
 {
@@ -22,8 +23,10 @@ class AuthController extends Controller
             }
 
             $usuario = User::where('email', $request->email)->first();
-            $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(120));
+            $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
             $token = $datos['plainTextToken'];
+
+            Cache::set($token, $usuario, getenv('SESSION_EXPIRATION'));
 
             return response()->json([
                 'status' => true,
@@ -39,18 +42,22 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         try {
+            $token = $request->bearerToken();
+            Cache::delete($token);
+
             $request->user()->currentAccessToken()->delete();
 
             return response()->json([
                 'status' => true,
-                'message' => 'Se ha cerrado la sesión con éxito.'
+                'message' => 'Sesión cerrada correctamente.',
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
             ], 500);
         }
     }
