@@ -26,7 +26,7 @@ class AuthController extends Controller
             $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
             $token = $datos['plainTextToken'];
 
-            Cache::set($token, $usuario, getenv('SESSION_EXPIRATION'));
+            Cache::put($token, $usuario, Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
 
             return response()->json([
                 'status' => true,
@@ -46,14 +46,28 @@ class AuthController extends Controller
     {
         try {
             $token = $request->bearerToken();
-            Cache::delete($token);
 
-            $request->user()->currentAccessToken()->delete();
+            if (isset($token)) {
+                if (Cache::get($token) === null) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Tu sesión ha expirado.',
+                    ], 403);
+                }
+
+                Cache::delete($token);
+                $request->user()->currentAccessToken()->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Sesión cerrada correctamente.',
+                ], 200);
+            }
 
             return response()->json([
-                'status' => true,
-                'message' => 'Sesión cerrada correctamente.',
-            ], 200);
+                'status' => false,
+                'message' => 'No se ha encontrado el token.',
+            ], 404);
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
