@@ -36,6 +36,13 @@ class UserController extends Controller
         try {
             $usuarios = User::all();
 
+            if($usuarios->isEmpty){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'No hay usuarios registrados.'
+                ], 404);
+            }
+
             return response()->json([
                 'usuarios' => $usuarios,
                 'status' => true,
