@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\EmailJobs;
 use App\Models\User;
-use App\Http\Controllers\EmailController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -21,28 +21,23 @@ class PasswordController extends Controller
                 $token = Password::getRepository()->create($usuario);
 
                 $datos = [
-                    'email' => $usuario->email,
+                    'from' => getenv('MAIL_FROM_ADDRESS'),
+                    'to' => $usuario->email,
+                    'subject' => 'Gestor de Tareas',
                     'nombre' => $usuario->nombre,
                     'apellido' => $usuario->apellido,
                     'titulo' => "Restablecer Contraseña",
+                    'body' => 'Hola ' . $usuario->nombre . " " . $usuario->apellido,
                     'token' => $token
                 ];
 
-                $correoEstado = (new EmailController)->enviar($datos);
-				
-                if($correoEstado){
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Revise su correo y siga las instrucciones.',
-                        'token' => $token,
-                        'datos' => $datos
-                    ], 200);
-                }
+                dispatch(new EmailJobs($datos));
 
                 return response()->json([
-                    'status' => false,
-                    'message' => 'Error al enviar el correo.',
-                ], 404);
+                    'status' => true,
+                    'message' => 'Correo enviado con éxito.',
+                    'datos' => $datos
+                ], 200);
             }
 
             return response()->json([
@@ -52,8 +47,8 @@ class PasswordController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
+                'message' => 'Error al enviar el correo.',
+            ], 404);
         }
     }
 
