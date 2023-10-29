@@ -23,7 +23,7 @@ class PasswordController extends Controller
                 $datos = [
                     'from' => getenv('MAIL_FROM_ADDRESS'),
                     'to' => $usuario->email,
-                    'subject' => 'Gestor de Tareas',
+                    'subject' => 'Gestor de Tareas - Restablecer Contraseña',
                     'nombre' => $usuario->nombre,
                     'apellido' => $usuario->apellido,
                     'titulo' => "Restablecer Contraseña",

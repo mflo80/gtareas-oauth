@@ -30,6 +30,7 @@ class EmailClass extends Mailable
      */
     public function build()
     {
-        return $this->view('PasswordResetEmail', ['mailData' => $this->datos]);
+        return $this->subject($this->datos['subject'])
+                    ->view('PasswordResetEmail', ['mailData' => $this->datos]);
     }
 }

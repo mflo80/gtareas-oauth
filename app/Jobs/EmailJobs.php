@@ -17,26 +17,21 @@ class EmailJobs implements ShouldQueue
 
     protected $datos;
 
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
+    public $tries = 3;
 
     public function __construct($datos)
     {
         $this->datos = $datos;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-
     public function handle()
     {
         $email = new EmailClass($this->datos);
         Mail::to($this->datos['to'])->send($email);
+    }
+
+    public function retryUntil()
+    {
+        return now()->addSeconds(10);
     }
 }

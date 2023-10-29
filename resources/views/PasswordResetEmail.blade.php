@@ -20,4 +20,3 @@
         <img class="logo" src="https://raw.githubusercontent.com/mflo80/gtareas-login/main/public/img/logo.png" width="200px" alt="LOGO" />
     </body>
 </html>
-
