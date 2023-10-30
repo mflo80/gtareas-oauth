@@ -23,11 +23,11 @@ class PasswordController extends Controller
                 $datos = [
                     'from' => getenv('MAIL_FROM_ADDRESS'),
                     'to' => $usuario->email,
-                    'subject' => 'Gestor de Tareas - Restablecer Contraseña',
+                    'subject' => 'Solicitud para restablecer contraseña',
                     'nombre' => $usuario->nombre,
                     'apellido' => $usuario->apellido,
                     'titulo' => "Restablecer Contraseña",
-                    'body' => 'Hola ' . $usuario->nombre . " " . $usuario->apellido,
+                    'subtitulo' => 'Hola, ' . $usuario->nombre . " " . $usuario->apellido . ":",
                     'token' => $token
                 ];
 
@@ -35,7 +35,7 @@ class PasswordController extends Controller
 
                 return response()->json([
                     'status' => true,
-                    'message' => 'Correo enviado con éxito.',
+                    'message' => 'Revise su correo y siga las instrucciones.',
                     'datos' => $datos
                 ], 200);
             }
