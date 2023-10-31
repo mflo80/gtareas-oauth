@@ -24,7 +24,7 @@ class AuthController extends Controller
 
             $usuario = User::where('email', $request->email)->first();
             $datos = (array) $usuario->createToken("access_token", ["*"], Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
-            $token = $datos['plainTextToken'];
+            $token = $datos['accessToken'];
 
             Cache::put($token, $usuario, Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
 
@@ -56,7 +56,8 @@ class AuthController extends Controller
                 }
 
                 Cache::delete($token);
-                $request->user()->currentAccessToken()->delete();
+                $request->user()->token()->revoke();
+
                 return response()->json([
                     'status' => true,
                     'message' => 'Sesión cerrada correctamente.',

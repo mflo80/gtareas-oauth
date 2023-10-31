@@ -12,3 +12,18 @@ Herramientas utilizadas para realizar el mismo:
 
 El código del resto de los contenedores se encuentra mencionado en:
 - https://github.com/mflo80/gtareas-docker
+
+<br>
+Observaciones:
+<br><br>
+Se debe de instalar Laravel Passport, por lo que se deberá de seguir los siguientes pasos:
+<br>
+
+- composer require laravel/passport
+- php artisan migrate
+- php artisan passport:install
+
+Para generar las keys en Passport:
+
+- php artisan passport:keys
+- php artisan passport:client --password

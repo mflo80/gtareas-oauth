@@ -18,15 +18,15 @@ use App\Http\Controllers\PasswordController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('auth/login', 'login')->name('login');
-    Route::get('auth/logout', 'logout')->middleware('auth:sanctum')->name('logout');
+    Route::get('auth/logout', 'logout')->middleware('auth:api')->name('logout');
 });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/usuarios', 'buscar')->middleware('auth:sanctum')->name('buscar');
-    Route::get('/usuarios/{id}', 'buscar_id')->middleware('auth:sanctum')->name('buscar_id');
+    Route::get('/usuarios', 'buscar')->middleware('auth:api')->name('buscar');
+    Route::get('/usuarios/{id}', 'buscar_id')->middleware('auth:api')->name('buscar_id');
     Route::post('/usuarios', 'registrar')->name('registrar');
-    Route::put('/usuarios/{id}', 'actualizar')->middleware('auth:sanctum')->name('actualizar');
-    Route::delete('/usuarios/{id}', 'eliminar')->middleware('auth:sanctum')->name('eliminar');
+    Route::put('/usuarios/{id}', 'actualizar')->middleware('auth:api')->name('actualizar');
+    Route::delete('/usuarios/{id}', 'eliminar')->middleware('auth:api')->name('eliminar');
 });
 
 Route::controller(PasswordController::class)->group(function () {
