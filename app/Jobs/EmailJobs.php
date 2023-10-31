@@ -32,6 +32,6 @@ class EmailJobs implements ShouldQueue
 
     public function retryUntil()
     {
-        return now()->addSeconds(10);
+        return now()->addSeconds(15);
     }
 }

@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class PasswordController extends Controller
 {
-    public function generarToken(Request $request){
+    public function generar_token(Request $request){
         try {
             $usuario = User::where('email', $request->email)->first();
 
