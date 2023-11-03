@@ -76,4 +76,24 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function verificar_token(Request $request)
+    {
+        $token = str_replace('Bearer ', '', $request->header('Authorization'));
+
+        if ($this->es_token_valido($token)) {
+            return response()->json(['message' => 'Token válido.']);
+        } else {
+            return response()->json(['message' => 'Token inválido.'], 401);
+        }
+    }
+
+    private function es_token_valido($token)
+    {
+        if(Cache::get($token) !== null){
+            return true;
+        }
+
+        return false;
+    }
 }

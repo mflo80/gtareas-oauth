@@ -19,6 +19,7 @@ use App\Http\Controllers\PasswordController;
 Route::controller(AuthController::class)->group(function () {
     Route::post('auth/login', 'login')->name('login');
     Route::get('auth/logout', 'logout')->middleware('auth:api')->name('logout');
+    Route::get('auth/autenticado', 'verificar_token');
 });
 
 Route::controller(UserController::class)->group(function () {
