@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\PasswordController;
 Route::controller(AuthController::class)->group(function () {
     Route::post('auth/login', 'login')->name('login');
     Route::get('auth/logout', 'logout')->middleware('auth:api')->name('logout');
+});
+
+Route::controller(TokenController::class)->group(function () {
     Route::get('auth/autenticado', 'verificar_token');
 });
 
