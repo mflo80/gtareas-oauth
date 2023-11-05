@@ -14,7 +14,7 @@ class TokenController extends Controller
 
         if ($this->es_token_valido($token)) {
             $usuario = Cache::get($token);
-            Cache::put($token, $usuario, Carbon::now()->addMinutes(getenv('SESSION_EXPIRATION')));
+            Cache::put($token, $usuario, Carbon::now()->addMinutes(getenv('SESSION_LIFETIME')));
             return response()->json([
                 'usuario' => $usuario,
                 'message' => 'Token válido.'
