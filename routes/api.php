@@ -35,7 +35,7 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(PasswordController::class)->group(function () {
-    Route::post('/password', 'generar_token')->name('generar_token');
-    Route::get('/password/{token}', 'enviar_codigo')->name('modificar');
-    Route::put('/password', 'modificar')->name('modificar');
+    Route::post('/password', 'generar_token');
+    Route::get('/password/{token}', 'comprobar_token');
+    Route::put('/password', 'modificar');
 });

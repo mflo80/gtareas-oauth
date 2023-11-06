@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -31,6 +33,8 @@ class PasswordController extends Controller
                     'token' => $token
                 ];
 
+                Cache::put($token, $datos, Carbon::now()->addMinutes(getenv('SESSION_LIFETIME')));
+
                 dispatch(new EmailJobs($datos));
 
                 return response()->json([
@@ -52,10 +56,35 @@ class PasswordController extends Controller
         }
     }
 
+    public function comprobar_token($token){
+        try {
+            $datos = Cache::get($token);
+
+            if($datos){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Token válido.',
+                    'datos' => $datos
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Token inválido.'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error al comprobar el token.',
+            ], 404);
+        }
+    }
+
     public function modificar(Request $request){
         try {
             Password::reset(
                 $request->only('email', 'password', 'token'),
+
                 function (User $user, string $password) {
                     $user->forceFill([
                         'password' => Hash::make($password)

@@ -80,7 +80,7 @@
         ingresa al siguiente Link:</p>
     <a href='{{ getenv('SERVER_RESTABLECER_PASSWORD') }}/password-{{ $mailData['token'] }}' target="_blank">Restablecer Contraseña</a>
     <br><br>
-    <p>Es de acotar que, el plazo máximo para restablecer la contraseña es de 15 minutos, trascurrido dicho tiempo, deberá de
+    <p>Es de acotar que, el plazo máximo para restablecer la contraseña es de {{ getenv('SESSION_LIFETIME') }} minutos, trascurrido dicho tiempo, deberá de
        solicitar nuevamente el restablecimiento de la contraseña, a fin de que le llegue un nuevo correo con un Link de acceso vigente.</p>
     <br>
     <div class="saludo">

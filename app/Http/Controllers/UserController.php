@@ -12,6 +12,16 @@ class UserController extends Controller
 {
     public function registrar(Request $request){
         try {
+            $email = $request->post('email');
+            $usuarioExistente = User::where('email', $email)->first();
+
+            if ($usuarioExistente) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'El correo ya se encuentra registrado.'
+                ], 400);
+            }
+
             $usuario = new User();
             $usuario->nombre = $request->post('nombre');
             $usuario->apellido = $request->post('apellido');
