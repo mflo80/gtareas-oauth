@@ -96,6 +96,8 @@ class PasswordController extends Controller
                 }
             );
 
+            Cache::forget($request->token);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Contraseña modificada con éxito.',
