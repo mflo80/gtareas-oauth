@@ -46,18 +46,16 @@ class UserController extends Controller
         try {
             $usuarios = User::all();
 
-            if($usuarios->isEmpty){
-                return response()->json([
-                    'status' => true,
-                    'message' => 'No hay usuarios registrados.'
-                ], 404);
-            }
-
             return response()->json([
                 'usuarios' => $usuarios,
                 'status' => true,
                 'message' => 'Usuarios encontrados.'
             ], 200);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json([
+                'status' => true,
+                'message' => 'No hay usuarios registrados.'
+            ], 404);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
