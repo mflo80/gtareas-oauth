@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\Feature\AuthTest;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
 class UserTest extends TestCase
 {
+    use WithoutMiddleware;
+
     public function test_registrar_usuario()
     {
         $datos = [
@@ -17,6 +19,7 @@ class UserTest extends TestCase
         ];
 
         $response = $this->postJson('api/usuarios', $datos);
+
         $response->assertStatus(200)
         ->assertJsonFragment([
             'status' => true,
@@ -34,15 +37,18 @@ class UserTest extends TestCase
         ];
 
         $response = $this->postJson('api/usuarios', $datos);
-        $response->assertStatus(500)
+
+        $response->assertStatus(400)
         ->assertJsonFragment([
-            'status' => false
+            'status' => false,
+            'message' => 'El correo ya se encuentra registrado.'
         ]);
     }
 
     public function test_buscar_usuarios()
     {
         $response = $this->getJson('api/usuarios');
+
         $response->assertStatus(200)
         ->assertJsonFragment([
             'status' => true,

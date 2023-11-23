@@ -14,7 +14,7 @@ class AuthTest extends TestCase
         global $token;
 
         $datos = [
-            "email" => "juan.perez@example.com",
+            "email" => "juan.perez@gtareas.com",
             "password" => "123456"
         ];
 
@@ -62,7 +62,7 @@ class AuthTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonFragment([
                "status" => true,
-               "message" => "Se ha cerrado la sesión con éxito."
+               "message" => "Sesión cerrada correctamente."
             ]);
     }
 
