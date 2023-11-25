@@ -30,7 +30,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/usuarios', 'buscar')->middleware('auth:api')->name('buscar');
     Route::get('/usuarios/{id}', 'buscar_id')->middleware('auth:api')->name('buscar_id');
     Route::post('/usuarios', 'registrar')->name('registrar');
-    Route::put('/usuarios/{id}', 'actualizar')->middleware('auth:api')->name('actualizar');
+    Route::put('/usuarios/{id}', 'modificar')->middleware('auth:api')->name('modificar');
     Route::delete('/usuarios/{id}', 'eliminar')->middleware('auth:api')->name('eliminar');
 });
 

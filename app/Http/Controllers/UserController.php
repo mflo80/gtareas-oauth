@@ -98,7 +98,7 @@ class UserController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Usuario actualizado con éxito.'
+                'message' => 'Datos modificados con éxito.'
             ], 200);
         } catch (ModelNotFoundException $ex) {
             return response()->json([
