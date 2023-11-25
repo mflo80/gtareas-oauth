@@ -12,9 +12,9 @@ class UserTest extends TestCase
     public function test_registrar_usuario()
     {
         $datos = [
-            'nombre' => 'Juan',
-            'apellido' => 'Pérez',
-            'email' => 'jperez@prueba.com',
+            'nombre' => 'Pepita',
+            'apellido' => 'Pistolera',
+            'email' => 'ppistolera@gtareas.com',
             'password' => '123456'
         ];
 
@@ -30,9 +30,9 @@ class UserTest extends TestCase
     public function test_registrar_usuario_error_email_registrado()
     {
         $datos = [
-            'nombre' => 'Juan',
-            'apellido' => 'Pérez',
-            'email' => 'jperez@prueba.com',
+            'nombre' => 'Pepita',
+            'apellido' => 'Pistolera',
+            'email' => 'ppistolera@gtareas.com',
             'password' => '123456'
         ];
 
