@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -13,6 +13,8 @@ class UserController extends Controller
 {
     public function registrar(Request $request){
         try {
+            Cache::forget('usuarios');
+
             $email = $request->post('email');
             $usuarioExistente = User::where('email', $email)->first();
 
@@ -45,7 +47,9 @@ class UserController extends Controller
 
     public function buscar(){
         try {
-            $usuarios = User::all();
+            $usuarios = Cache::remember('usuarios', 60, function () {
+                return User::all();
+            });
 
             return response()->json([
                 'usuarios' => $usuarios,
@@ -89,6 +93,8 @@ class UserController extends Controller
 
     public function modificar(Request $request, $id){
         try {
+            Cache::forget('usuarios');
+
             $usuario = User::findOrFail($id);
             $usuario->nombre = $request->nombre;
             $usuario->apellido = $request->apellido;
@@ -115,6 +121,8 @@ class UserController extends Controller
 
     public function eliminar($id){
         try {
+            Cache::forget('usuarios');
+
             $usuario = User::findOrFail($id);
             $usuario->delete();
 
